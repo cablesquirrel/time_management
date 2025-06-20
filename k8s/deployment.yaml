@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-mgmt
+  namespace: time-mgmt
+  labels:
+    app: time-mgmt
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: time-mgmt
+  template:
+    metadata:
+      name: time-mgmt
+      labels:
+        app: time-mgmt
+    spec:
+      containers:
+      - name: time-mgmt
+        image: ghcr.io/cablesquirrel/time-management:latest
+        imagePullPolicy: Always
+        env:
+        - name: DEFAULT_BALANCE_MINUTES
+          valueFrom:
+            secretKeyRef:
+              name: time-mgmt-secrets
+              key: DEFAULT_BALANCE_MINUTES
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+        - name: ghcr-creds
