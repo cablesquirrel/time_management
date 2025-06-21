@@ -39,7 +39,7 @@ class TimeManager:
                 if not self._timer_paused:
                     self._balance_seconds -= 1
                     # Handle out-of-time
-                    if self._balance_seconds == 0:
+                    if self._balance_seconds <= 0:
                         self._timer_paused = True
                         self.stop_services()
             # Tick every second

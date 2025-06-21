@@ -13,9 +13,12 @@ time_manager = TimeManager.get_instance()
 
 @router.get("/text")
 async def get_display_text() -> JSONResponse:
-    paused_status = await time_manager.is_paused()
-    if paused_status is True:
-        return build_message_json("*Time Paused*", format_time_string(await time_manager.get_remaining_time()))
+    paused_status: bool = await time_manager.is_paused()
+    remaining_time: tuple[int, int, int, int] = await time_manager.get_remaining_time()
+    if remaining_time[0] <= 0:
+        return build_message_json(" *Out of Time*", format_time_string(remaining_time))
+    elif paused_status is True:
+        return build_message_json(" *Time Paused*", format_time_string(remaining_time))
     else:
         return build_message_json("", format_time_string(await time_manager.get_remaining_time()))
 
