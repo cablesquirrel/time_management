@@ -3,7 +3,9 @@
 import asyncio
 from typing import Self
 
+from awx_service import AWXService
 from config import settings
+from service_base import ServiceBase
 
 
 class TimeManager:
@@ -15,8 +17,9 @@ class TimeManager:
         """Class initialization."""
         self._shutdown: bool = False
         self._balance_seconds: int = settings.default_balance_minutes * 60
-        self._timer_paused = True
+        self._timer_paused: bool = True
         self._lock = asyncio.Lock()
+        self._services: list[ServiceBase] = [AWXService()]
 
     def __new__(cls) -> None:
         """Class constructor."""
@@ -32,6 +35,10 @@ class TimeManager:
 
     async def run(self):
         """Start the process loop for the timer."""
+        if settings.begin_stopped:
+            # Start with all services stopped
+            await self.stop_services()
+
         while not self._shutdown:
             # Acquire the lock
             async with self._lock:
@@ -41,7 +48,7 @@ class TimeManager:
                     # Handle out-of-time
                     if self._balance_seconds <= 0:
                         self._timer_paused = True
-                        self.stop_services()
+                        await self.stop_services()
             # Tick every second
             await asyncio.sleep(1)
 
@@ -53,14 +60,14 @@ class TimeManager:
         """Pause the process loop."""
         async with self._lock:
             self._timer_paused = True
-            self.stop_services()
+            await self.stop_services()
 
     async def resume(self):
         """Pause the process loop."""
         async with self._lock:
             self._timer_paused = False
             if self._balance_seconds > 0:
-                self.start_services()
+                await self.start_services()
 
     async def is_paused(self) -> bool:
         """Get the current paused status."""
@@ -127,8 +134,10 @@ class TimeManager:
         async with self._lock:
             self._balance_seconds += hours * 60 * 60
 
-    def stop_services(self):
-        pass
+    async def stop_services(self):
+        for service in self._services:
+            await service.stop()
 
-    def start_services(self):
-        pass
+    async def start_services(self):
+        for service in self._services:
+            await service.start()

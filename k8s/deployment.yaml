@@ -8,7 +8,7 @@ metadata:
     app: time-mgmt
 spec:
   replicas: 1
-  selector: 
+  selector:
     matchLabels:
       app: time-mgmt
   template:
@@ -21,12 +21,11 @@ spec:
       - name: time-mgmt
         image: ghcr.io/cablesquirrel/time-management:latest
         imagePullPolicy: Always
-        env:
-        - name: DEFAULT_BALANCE_MINUTES
-          valueFrom:
-            secretKeyRef:
-              name: time-mgmt-secrets
-              key: DEFAULT_BALANCE_MINUTES
+        envFrom:
+        - configMapRef:
+            name: time-mgmt-config
+        - secretRef:
+          name: time-mgmt-secrets
         ports:
         - containerPort: 3000
       imagePullSecrets:

@@ -11,4 +11,3 @@ spec:
     - port: 3000
   selector:
     app: time-mgmt
- 

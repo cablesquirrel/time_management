@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-mgmt-config
+  namespace: time-mgmt
+data:
+  BEGIN_STOPPED: true
+  DEFAULT_BALANCE_MINUTES: 180
+  AWX_JOB_TEMPLATE_ID: 9
+  AWX_JOB_VAR_INTERFACE: GigabitEthernet0/17
+  AWX_JOB_VAR_SWITCH: NWBYFLBY1BW-SW2

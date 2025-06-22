@@ -2,13 +2,13 @@
 
 import asyncio
 from contextlib import asynccontextmanager
+from logging import INFO
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from index import router
 from logger import CustomLogger
 from time_manager import TimeManager
-from logging import INFO
 
 logger = CustomLogger()
 
