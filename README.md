@@ -41,7 +41,7 @@ uv sync
 
 ```bash
 docker build -t ghcr.io/<username>/time-management:latest --progress=plain .
-docker push  ghcr.io/<username>/time-management:latest
+docker push ghcr.io/<username>/time-management:latest
 ```
 
 ## Running image locally
