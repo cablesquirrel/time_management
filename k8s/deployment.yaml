@@ -25,7 +25,7 @@ spec:
         - configMapRef:
             name: time-mgmt-config
         - secretRef:
-          name: time-mgmt-secrets
+            name: time-mgmt-secrets
         ports:
         - containerPort: 3000
       imagePullSecrets:
