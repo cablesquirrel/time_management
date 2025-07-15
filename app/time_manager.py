@@ -44,11 +44,12 @@ class TimeManager:
             async with self._lock:
                 # Decrement the balance if timer not paused
                 if not self._timer_paused:
-                    self._balance_seconds -= 1
                     # Handle out-of-time
                     if self._balance_seconds <= 0:
                         self._timer_paused = True
                         await self.stop_services()
+                    else:
+                        self._balance_seconds -= 1
             # Tick every second
             await asyncio.sleep(1)
 
@@ -65,8 +66,8 @@ class TimeManager:
     async def resume(self):
         """Pause the process loop."""
         async with self._lock:
-            self._timer_paused = False
             if self._balance_seconds > 0:
+                self._timer_paused = False
                 await self.start_services()
 
     async def is_paused(self) -> bool:
