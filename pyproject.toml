@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "colorama>=0.4.6",
+    "diagrams>=0.24.4",
     "fastapi>=0.115.13",
     "httpx>=0.28.1",
     "pydantic-settings>=2.9.1",
